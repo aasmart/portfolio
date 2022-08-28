@@ -1,6 +1,6 @@
 :root {
     --intro-slide-delay: .7s;
-    --intro-slide-amount: -52%;
+    --intro-slide-amount: -1.176em;
 }
 
 html, body, main {
@@ -40,11 +40,11 @@ HANDLE MAIN INTRO
 
 #intro > span:first-child {
     position: absolute;
-    animation: fade-in 0.5s ease-in-out forwards, intro-hi-transition 1s var(--intro-slide-delay) ease-in-out forwards;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    animation: fade-in 0.5s ease-in-out forwards, intro-hi-transition 1s var(--intro-slide-delay) ease-in-out forwards;
 }
 
 #intro > span:first-child span:nth-child(2) {
