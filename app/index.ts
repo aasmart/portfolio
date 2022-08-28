@@ -89,7 +89,6 @@ window.onload = () => {
         const navBar = document.getElementsByTagName("nav").item(0);
         navBar.style.transform = "translateX(0%)"
         navBar.style.boxShadow = "0 4px 15px black"
-        highlightNavElement(3)
     }
 }
 
@@ -99,7 +98,7 @@ function highlightNavElement(index: number) {
     const navBarElements = Array.from(navUl.children);
 
     const element = navBarElements[index] as HTMLElement;
-    if(element == undefined)
+    if(element === undefined)
         return;
 
     element.focus()
