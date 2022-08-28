@@ -1,6 +1,7 @@
 function navBarIn() {
     const navBar = document.getElementsByTagName("nav").item(0);
     navBar.style.animation = "nav-bar-in 0.75s ease-in-out forwards";
+    // Parse the elements in the unordered list into an array of text contents
     const navUl = navBar.children[0];
     const navBarElements = Array.from(navUl.children);
     const text = navBarElements.map((item) => item.textContent);
@@ -17,8 +18,13 @@ function navBarIn() {
             afterSpan.textContent = afterSpan.textContent === "|" ? " " : "|";
         }
     }, 200);
+    // Variables for handling the exit of the typing animation
+    const letterTimeouts = [];
+    let skipTyping = false;
     // Magic text stuff
-    navBar.addEventListener("animationend", () => {
+    navBar.addEventListener("animationend", (e) => {
+        if (e.target.tagName !== "NAV")
+            return;
         // Stop the cursor and set it back to its default state
         doTicker = false;
         afterSpan.textContent = "|";
@@ -30,7 +36,14 @@ function navBarIn() {
                 let element = navBarElements[i];
                 if (element === undefined)
                     continue;
-                setTimeout(() => { element.textContent += text[i].at(c); }, totalDelay);
+                if (skipTyping)
+                    return;
+                // Span abuse to create the letters
+                letterTimeouts.push(setTimeout(() => {
+                    const span = document.createElement("span");
+                    span.innerText = text[i].at(c);
+                    element.appendChild(span);
+                }, totalDelay));
                 totalDelay += delay;
             }
         }
@@ -42,9 +55,23 @@ function navBarIn() {
             setTimeout(() => {
                 clearInterval(blinkingInterval);
                 afterSpan.remove();
-            }, 600);
+            }, 800);
         }, totalDelay);
     });
+    // Allows the user to skip the typing animation
+    let skipTypingEvent = () => {
+        window.removeEventListener("keypress", skipTypingEvent);
+        skipTyping = true; // Tell the loop that's handling the letter typing to return
+        afterSpan.remove(); // Clear the cursor
+        sessionStorage.setItem("watchedIntro", "true"); // So the user doesn't have to watch the animation more than once
+        letterTimeouts.forEach((id) => clearTimeout(id)); // Get rid of the typing timeouts
+        // Fill all the elements back up with their proper text
+        for (let i = 0; i < navBarElements.length; i++) {
+            navBarElements[i].innerHTML = '';
+            navBarElements[i].textContent = text[i];
+        }
+    };
+    window.addEventListener("keypress", skipTypingEvent);
 }
 window.onload = () => {
     let closeIntro = document.getElementById("intro-close");
@@ -58,18 +85,15 @@ window.onload = () => {
             setTimeout(() => {
                 intro.remove();
             }, 500);
+        };
+        let skipIntro = () => {
+            closeIntro.removeEventListener("click", skipIntro);
+            window.removeEventListener("keypress", skipIntro);
+            closeIntroAnimation();
             navBarIn();
         };
-        closeIntro.addEventListener("click", () => {
-            closeIntroAnimation();
-        });
-        let canPressKey = true;
-        window.addEventListener("keypress", () => {
-            if (canPressKey) {
-                canPressKey = false;
-                closeIntroAnimation();
-            }
-        });
+        closeIntro.addEventListener("click", skipIntro);
+        window.addEventListener("keypress", skipIntro);
     }
     else {
         // Skip all the animations

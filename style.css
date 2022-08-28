@@ -32,13 +32,13 @@ HANDLE MAIN INTRO
     height: auto;
 }
 
-#intro span {
+#intro > span {
     font-size: 10em;
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 800;
 }
 
-#intro div {
+#intro > span:first-child {
     position: absolute;
     animation: fade-in 0.5s ease-in-out forwards, intro-hi-transition 1s var(--intro-slide-delay) ease-in-out forwards;
     display: flex;
@@ -47,7 +47,7 @@ HANDLE MAIN INTRO
     justify-content: center;
 }
 
-#intro div span:nth-child(2) {
+#intro > span:first-child span:nth-child(2) {
     display: inline-block;
     transform-origin: 100% 100%;
     animation: hand-wave 0.5s calc(var(--intro-slide-delay) - .5s) ease-in-out forwards, fade-out .25s calc(var(--intro-slide-delay) + .4s) ease-in-out forwards;
@@ -211,11 +211,6 @@ nav ul {
     transition-duration: 0.25s;
 }
 
-nav ul span:first-child:after {
-    white-space: break-spaces;
-    content: ' ';
-}
-
 nav ul:hover .function, nav ul:focus-within > .function {
     color: #503AFD;
     text-shadow: 0 2px 2px black;
@@ -233,6 +228,11 @@ nav ul li.nav-element:hover, nav ul li.nav-element:focus {
     animation: bounce 1.5s ease-in-out infinite;
 }
 
+nav ul li span {
+    display: inline-block;
+    animation: letter-in 0.15s ease-in-out forwards;
+}
+
 .hidden {
     opacity: 0;
 }
@@ -248,6 +248,16 @@ nav ul li.nav-element:hover, nav ul li.nav-element:focus {
 
     100 % {
         transform: translateY(0);
+    }
+}
+
+@keyframes letter-in {
+    0% {
+        transform: translateY(-15%) rotate(.025turn) scale(75%);
+    }
+
+    100 % {
+        transform: translateY(0) rotate(0) scale(100%);
     }
 }
 
