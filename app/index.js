@@ -5,6 +5,10 @@ function navBarIn() {
     const navUl = navBar.children[0];
     const navBarElements = Array.from(navUl.children);
     const text = navBarElements.map((item) => item.textContent);
+    // Grab the hrefs
+    const href = Array.from(navBar.getElementsByTagName("a"))
+        .map((item) => item.getAttribute("href"));
+    // Clear text contents of nav bar items
     navBarElements.forEach((item) => { item.textContent = ""; });
     // Create the cursor
     const afterSpan = document.createElement("span");
@@ -32,17 +36,22 @@ function navBarIn() {
         const delay = 30;
         let totalDelay = 0;
         for (let i = 0; i < text.length; i++) {
+            let element = navBarElements[i];
+            if (element === undefined)
+                continue;
+            // Create the nav's anchor
+            let anchor = element.appendChild(document.createElement("a"));
+            if (href[i] !== null)
+                anchor.href = href[i];
+            // Loop through characters
             for (let c = 0; c < text[i]?.length; c++) {
-                let element = navBarElements[i];
-                if (element === undefined)
-                    continue;
                 if (skipTyping)
                     return;
                 // Span abuse to create the letters
                 letterTimeouts.push(setTimeout(() => {
                     const span = document.createElement("span");
                     span.innerText = text[i].at(c);
-                    element.appendChild(span);
+                    anchor.appendChild(span);
                 }, totalDelay));
                 totalDelay += delay;
             }
@@ -68,12 +77,17 @@ function navBarIn() {
         // Fill all the elements back up with their proper text
         for (let i = 0; i < navBarElements.length; i++) {
             navBarElements[i].innerHTML = '';
-            navBarElements[i].textContent = text[i];
+            let anchor = document.createElement("a");
+            anchor.textContent = text[i];
+            if (href[i] !== null)
+                anchor.href = href[i];
+            navBarElements[i].appendChild(anchor);
         }
     };
     window.addEventListener("keypress", skipTypingEvent);
 }
 window.onload = () => {
+    const html = document.getElementsByTagName("html")[0];
     let closeIntro = document.getElementById("intro-close");
     let intro = closeIntro.parentElement;
     // Check if the user has already watched the animations
@@ -83,7 +97,11 @@ window.onload = () => {
             document.activeElement.blur();
             intro.style.animation = "fade-out .5s forwards";
             setTimeout(() => {
-                intro.remove();
+                const aboutMe = document.getElementById("about");
+                aboutMe.style.opacity = "0";
+                intro.parentElement.remove();
+                html.style.overflowY = "auto";
+                aboutMe.style.animation = "fade-in 0.5s ease-in-out forwards";
             }, 500);
         };
         let skipIntro = () => {
@@ -97,7 +115,8 @@ window.onload = () => {
     }
     else {
         // Skip all the animations
-        intro.remove();
+        html.style.overflowY = "auto";
+        intro.parentElement.remove();
         const navBar = document.getElementsByTagName("nav").item(0);
         navBar.style.transform = "translateX(0%)";
         navBar.style.boxShadow = "0 4px 15px black";

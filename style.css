@@ -1,6 +1,15 @@
+* {
+    scroll-behavior: smooth;
+}
+
 :root {
     --intro-slide-delay: .7s;
     --intro-slide-amount: -1.176em;
+    overflow-x: hidden;
+}
+
+html {
+    overflow-y: hidden;
 }
 
 html, body, main {
@@ -197,6 +206,7 @@ nav {
     font-family: "Consolas", sans-serif;
     font-weight: 800;
     white-space: break-spaces;
+    z-index: 100;
 
     transform: translateY(-100%);
 }
@@ -222,19 +232,28 @@ nav ul li {
     transition-duration: 0.25s;
 }
 
-nav ul li.nav-element:hover, nav ul li.nav-element:focus {
+nav ul li a {
+    color: inherit;
+    text-decoration: inherit;
+    font-weight: inherit;
+}
+
+nav ul li.nav-element:hover, nav ul li.nav-element:focus-within {
     color: #344FE3;
     text-shadow: 0 2px 2px black;
-    animation: bounce 1.5s ease-in-out infinite;
+    animation: bounce .25s ease-in-out forwards;
 }
 
-nav ul li span {
+nav ul li.nav-element.nav--selected:after {
+    content: '';
+    display: block;
+    width: auto;
+    border-bottom: 4px solid red;
+}
+
+nav ul li a span {
     display: inline-block;
     animation: letter-in 0.15s ease-in-out forwards;
-}
-
-.hidden {
-    opacity: 0;
 }
 
 @keyframes bounce {
@@ -242,12 +261,8 @@ nav ul li span {
         transform: translateY(0);
     }
 
-    50% {
+    100% {
         transform: translateY(-3%);
-    }
-
-    100 % {
-        transform: translateY(0);
     }
 }
 
@@ -270,4 +285,26 @@ nav ul li span {
         transform: translateY(0);
         box-shadow: 0 4px 15px black;
     }
+}
+
+#about {
+
+}
+
+/*#about + div {*/
+/*    height: 10%;*/
+/*    width: 110%;*/
+/*    background-color: red;*/
+/*    position: static;*/
+/*}*/
+
+#projects {
+
+}
+
+/*
+MISC
+ */
+.hidden {
+    opacity: 0;
 }
