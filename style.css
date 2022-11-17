@@ -6,6 +6,9 @@
     --intro-slide-delay: .7s;
     --intro-slide-amount: -1.176em;
     overflow-x: hidden;
+
+    /*COLORS*/
+    --grey: #CCCCCC;
 }
 
 html {
@@ -187,6 +190,40 @@ HANDLE MAIN INTRO
     }
 }
 
+@media(prefers-reduced-motion) {
+    #intro > span:first-child {
+        animation: none;
+        transform: translateX(var(--intro-slide-amount));
+        opacity: 1;
+    }
+
+    #intro > span:first-child span:nth-child(2) {
+        animation: none;
+        opacity: 0;
+    }
+
+    #comma {
+        animation: none;
+        opacity: 1;
+    }
+
+    #name {
+        opacity: 1;
+        animation: none;
+    }
+
+    #name::after {
+        animation: none;
+        width: 100%;
+    }
+
+    #intro-close {
+        animation: none;
+        opacity: 1;
+        transition-duration: 0s;
+    }
+}
+
 /*
 MAIN CONTENT
  */
@@ -221,9 +258,16 @@ nav ul {
     transition-duration: 0.25s;
 }
 
-nav ul:hover .function, nav ul:focus-within > .function {
+/*
+Control the hover effect for for the outside
+*/
+nav ul:hover .nav__item_grey, nav ul:focus-within > .nav__item_grey {
     color: #503AFD;
     text-shadow: 0 2px 2px black;
+}
+
+.nav__item_grey {
+    color: var(--grey);
 }
 
 nav ul li {
@@ -238,19 +282,26 @@ nav ul li a {
     font-weight: inherit;
 }
 
-nav ul li.nav-element:hover, nav ul li.nav-element:focus-within {
+/*
+Controls the hover effect for the main nav links
+*/
+nav ul li.nav__item:hover, nav ul li.nav__item:focus-within {
     color: #344FE3;
     text-shadow: 0 2px 2px black;
     animation: bounce .25s ease-in-out forwards;
 }
 
-nav ul li.nav-element.nav--selected:after {
+nav ul li.nav__item_selected:after {
     content: '';
     display: block;
     width: auto;
-    border-bottom: 4px solid red;
+    height: auto;
+    background-color: red;
 }
 
+/*
+Animation effect for letters as they are added to the page
+ */
 nav ul li a span {
     display: inline-block;
     animation: letter-in 0.15s ease-in-out forwards;
@@ -284,6 +335,24 @@ nav ul li a span {
     100% {
         transform: translateY(0);
         box-shadow: 0 4px 15px black;
+    }
+}
+
+@media(prefers-reduced-motion) {
+    nav ul {
+        transition-duration: 0s;
+    }
+
+    nav ul li {
+        transition-duration: 0s;
+    }
+
+    nav ul li.nav__item:hover, nav ul li.nav__item:focus-within {
+        animation: none;
+    }
+
+    nav ul li a span {
+        animation: none;
     }
 }
 

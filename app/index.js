@@ -1,5 +1,11 @@
+const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches === true;
 function navBarIn() {
     const navBar = document.getElementsByTagName("nav").item(0);
+    if (isReduced) {
+        navBar.style.transform = "translateY(0)";
+        navBar.style.boxShadow = "0 4px 15px black";
+        return;
+    }
     navBar.style.animation = "nav-bar-in 0.75s ease-in-out forwards";
     // Parse the elements in the unordered list into an array of text contents
     const navUl = navBar.children[0];
@@ -95,14 +101,20 @@ window.onload = () => {
         sessionStorage.setItem("watchedIntro", "false");
         let closeIntroAnimation = () => {
             document.activeElement.blur();
-            intro.style.animation = "fade-out .5s forwards";
+            if (!isReduced)
+                intro.style.animation = "fade-out .5s forwards";
+            else
+                intro.style.opacity = "0";
             setTimeout(() => {
                 const aboutMe = document.getElementById("about");
                 aboutMe.style.opacity = "0";
                 intro.parentElement.remove();
                 html.style.overflowY = "auto";
-                aboutMe.style.animation = "fade-in 0.5s ease-in-out forwards";
-            }, 500);
+                if (!isReduced)
+                    aboutMe.style.animation = "fade-in 0.5s ease-in-out forwards";
+                else
+                    aboutMe.style.opacity = "1";
+            }, isReduced ? 0 : 500);
         };
         let skipIntro = () => {
             closeIntro.removeEventListener("click", skipIntro);
@@ -118,7 +130,7 @@ window.onload = () => {
         html.style.overflowY = "auto";
         intro.parentElement.remove();
         const navBar = document.getElementsByTagName("nav").item(0);
-        navBar.style.transform = "translateX(0%)";
+        navBar.style.transform = "translateY(0)";
         navBar.style.boxShadow = "0 4px 15px black";
     }
 };
